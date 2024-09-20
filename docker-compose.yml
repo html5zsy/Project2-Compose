@@ -2,19 +2,22 @@ version: '3.8'
 
 services:
   jenkins:
-    image: jenkins/jenkins:lts
-    container_name: jenkins
+    image: jenkins/jenkins:lts  # Using the latest stable version of Jenkins
     ports:
-      - "8080:8080"
-      - "50000:50000"
+      - "8080:8080"  # Exposing Jenkins web interface on port 8080
+      - "50000:50000"  # Port for Jenkins agents to communicate
     volumes:
-      - jenkins_home:/var/jenkins_home
-    networks:
-      - jenkins_network
+      - jenkins_home:/var/jenkins_home  # Persistent storage for Jenkins data and configurations
+      - /var/run/docker.sock:/var/run/docker.sock  # Mount Docker socket to allow Jenkins to run Docker commands
+    environment:
+      JENKINS_OPTS: --httpPort=8080  # Set HTTP port for Jenkins
+
+  dind:
+    image: docker:latest  # Latest Docker image for Docker-in-Docker
+    privileged: true  # Required for DinD to function correctly
+    volumes:
+      - dind-data:/var/lib/docker  # Volume for persisting Docker data used by DinD
 
 volumes:
-  jenkins_home:
-
-networks:
-  jenkins_network:
-    driver: bridge
+  jenkins_home:  # Volume for Jenkins data persistence
+  dind-data:  # Volume for Docker data persistence used by DinD
