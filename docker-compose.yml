@@ -4,7 +4,7 @@ services:
   jenkins:
     image: jenkins/jenkins:lts  # Using the latest stable version of Jenkins
     ports:
-      - "8080:8080"  # Exposing Jenkins web interface on port 8080
+      - "8888:8080"  # Exposing Jenkins web interface on port 8080
       - "50000:50000"  # Port for Jenkins agents to communicate
     volumes:
       - jenkins_home:/var/jenkins_home  # Persistent storage for Jenkins data and configurations
